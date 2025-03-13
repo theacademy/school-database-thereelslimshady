@@ -36,7 +36,9 @@ public class SchoolDaoImpl implements SchoolDao {
         // sorted by last name.
         // YOUR CODE STARTS HERE
 
-        String sql = "";
+        String sql = "select * " +
+                "from student " +
+                "order by lName";
 
         // YOUR CODE ENDS HERE
 
@@ -49,7 +51,10 @@ public class SchoolDaoImpl implements SchoolDao {
         // for all courses in the Computer Science department.
         // YOUR CODE STARTS HERE
 
-         String sql = "";
+         String sql = "select c.courseCode, c.CourseDesc " +
+                 "from course c " +
+                 "join teacher t on c.teacherId = t.tid " +
+                 "where t.dept LIKE '%Computer Science%'";
 
         // YOUR CODE ENDS HERE
         return jdbcTemplate.query(sql, new CourseMapper());
@@ -61,7 +66,9 @@ public class SchoolDaoImpl implements SchoolDao {
         //  Name the aggregate field `teacherCount`.
         // YOUR CODE STARTS HERE
 
-        String sql = "";
+        String sql = "select t.dept, COUNT(DISTINCT t.tid) as teacherCount " +
+                    "from teacher t " +
+                    "group by t.dept";
 
         // YOUR CODE ENDS HERE
         return jdbcTemplate.query(sql, new TeacherCountMapper());
@@ -74,7 +81,10 @@ public class SchoolDaoImpl implements SchoolDao {
         // Name the aggregate field `numStudents`.
         // YOUR CODE STARTS HERE
 
-        String sql = "";
+        String sql = "select c.courseCode, c.courseDesc, COUNT(cs.student_id) as numStudents " +
+                "from course c " +
+                "join course_student cs on cs.course_id = c.cid " +
+                "group by c.cid";
 
         // YOUR CODE ENDS HERE
         return jdbcTemplate.query(sql, new StudentCountMapper());
@@ -88,7 +98,7 @@ public class SchoolDaoImpl implements SchoolDao {
         // Need to add in the sid for Robert Dylan.  Use sid: 123
         // YOUR CODE STARTS HERE
 
-        String sql = "";
+        String sql = "insert into student (sid, fName, lName) values (123, 'Robert', 'Dylan')";
 
         // YOUR CODE ENDS HERE
          System.out.println(jdbcTemplate.update(sql));
@@ -101,7 +111,8 @@ public class SchoolDaoImpl implements SchoolDao {
         // You will need to include a sid in your query.  Use 123
         // YOUR CODE STARTS HERE
 
-        String sql = "";
+        String sql = "insert into course_student (student_id, course_id) " +
+                "values (123, (select cid from course where courseCode like 'CS148'))";
 
         // YOUR CODE ENDS HERE
         jdbcTemplate.update(sql);
@@ -112,7 +123,9 @@ public class SchoolDaoImpl implements SchoolDao {
         // Write a query to change the course description for course CS305 to "Advanced Python with Flask".
         // YOUR CODE STARTS HERE
 
-        String sql = "";
+        String sql = "update course " +
+                "set courseDesc= 'Advanced Python with Flask' " +
+                "where courseCode ='CS305'";
 
         // YOUR CODE ENDS HERE
         jdbcTemplate.update(sql);
@@ -123,7 +136,8 @@ public class SchoolDaoImpl implements SchoolDao {
         // Write a query to remove David Mitchell as a teacher.
         // YOUR CODE STARTS HERE
 
-        String sql = "";
+        String sql = "delete from teacher " +
+                "where (tFName like 'David' AND tLName like 'Mitchell' )";
 
         // YOUR CODE ENDS HERE
         jdbcTemplate.update(sql);
